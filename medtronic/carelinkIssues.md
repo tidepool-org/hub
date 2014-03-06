@@ -1,6 +1,6 @@
 This doc is an attempt to document the issues we have run into when dealing with medtronic carelink records.
 
-### `Dual/Square` bolus events can exist without a corresponding `Dual/Normal`.
+### `Dual/Square` bolus events can exist without a `Dual/Normal`.
 
 This appears to happen when a patient goes through the bolus wizard, chooses to do a dual and then sets the initial injection to 0 units.  The unit appears to not emit the `Dual/Normal` because it is 0 units.  This makes the logic to properly correlate boluses with their wizard more difficult.  It would be nice if `Dual/Normal` were always emitted, no matter what.  However, this issue can also be resolved by a solution to the next item.
 
