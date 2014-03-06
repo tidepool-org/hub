@@ -21,7 +21,7 @@ These events all come from the same patient action, but we must infer the relati
 
 ### Carelink data doesn't come back in event order
 
-There are two orderings to carelink data.  The timestamp order and the `(device,uploadId,seq_num)` order described when talking about correlating Bolus records above.  The `(device,uploadId,seq_num)` ordering is more interesting from a data correlation standpoint, but the timestamp order is more interesting from a user visualization standpoint.
+There are two orderings to carelink data.  The timestamp order and the `(device,uploadId,seq_num)` order described when talking about correlating Bolus records above.  The `(device,uploadId,seq_num)` ordering is more interesting from a data correlation standpoint, but the timestamp order is more interesting from a user visualization standpoint.  Carelink delivers data in timestamp order, and there isn't a readily apparent pattern to how events with the same timestamp are ordered.
 
 Because of the out-of-order delivery of events, at tidepool, we've decided to set a "lookahead buffer" of 100 events.  When we are looking to correlate events, we look in the future 100 events for a correlation and if we do not find it, then we assume it does not exist.  This is good enough for 99.9% of data, but it does mean that it is possible we don't correlate some events that should be correlated.
 
