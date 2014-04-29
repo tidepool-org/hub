@@ -44,6 +44,23 @@ Paradigm Revel - 723
 
 You go back up to your list of devices and try to figure out which one it is.  You don't know.  So, while Carelink reports are able to tell you things like "these are the device settings for unit with serial number XYZ", it is actually impossible to extract that same information from the CSV data that Carelink provides.
 
+### Resume events do not reference their corresponding suspend
+
+Similar to bolus and bolus wizard records, the act of suspending and resuming a pump is a set of linked events that are separate, but together form a single unit of activity.
+
+A resume always couples with a suspend.  Without a suspend, a resume is meaningless.  Similarly a suspend without a resume is generally meaningless for the purposes of visualization (it usually indicates that a pump has stopped being used as the final suspend will happen before the data is uploaded and then data from that device will never be seen again).
+
+Currently, carelink simply provides an indication that the device was suspended and an indication that it was resumed.  Theoretically, this should work fine, however, when you mix it with the inability to actually distinguish one device from another, you get into a bit of a conundrum.  
+
+What you want to do is take all of the "status" events for a given device and connect the suspends with the resumes.  However, when you change pumps from a broken pump of the same model as your new good pump and you don't handle the data uploading just perfectly, you can quite easily end up in a case where you have a suspend event from the broken pump, another suspend event from the working pump and then a resume event from the working pump.  Now you have two suspends followed by a resume and you don't necessarily know which one is correct and which one to ignore.
+
+From looking at the Daily Summary Report in Carelink, when this happens, Carelink seems to take the heuristic that the shortest possible gap in suspension is "correct" and it ignores the other suspend event.  This appears to be the same if you end up with doubled up "resume" events.  At Tidepool, we take a slightly different tact:
+
+1. We first group the data by its upload, if a suspend and resume both existed in the same upload, then they belong together.  We mark them and store them as such.
+2. The remaining suspend/resume events (the ones that span upload boundaries), are then associated with each other on a per-device (or as close to it as we can get) basis.
+
+When we associate events together, we assign an id to the "suspend" event and then in the "resume" event's metadata, we attach a "joinKey" which points back to the suspend event in question.  This allows downstream processing to not have to guess at which datum is effected by which event.  Medtronic should adopt the same strategy when storing the actual events from its pumps.  That is, when it goes into suspend, it should "id" the suspend event and store that.  When it comes out of suspend, it should then generate an audit log with the id from the suspend event stored in it and clear the stored id.
+
 ### Temp Percent Basals stop `BasalProfileStart` events
 
 In the Carelink csv, there are events called `BasalProfileStart`.  These signify the start of a new basal rate "on shedule".  I.e. they happen for each change in basal rate that occurs because of your basal schedules.  They happen pretty regularly and have a nice amount of information in them.  These events were pretty well thought out and are generally useful.
