@@ -25,7 +25,7 @@ There are two orderings to carelink data.  The timestamp order and the `(uploadI
 
 Because of the out-of-order delivery of events, we are forced to do a significant amount of sorting and re-sorting of the data in order to do various operations.  This wouldn't be an issue if there were a `Raw-Join Key` field on the data as described above.  And that would be the prefered solution for this issue.  But, short of that, it would be nice if the timestamps were such that you could order based on the tuple `(timestamp,uploadId,seq_num)` and get a well-ordered sequence of events such that correlated events happen in order.
 
-### Carelink provides no way of separate devices
+### Carelink provides no way of separating device streams
 
 If, for example, your pump breaks.  It's under warranty so you talk to Medtronic and get another pump, that new pump will be the same exact model as your old one (that's how these things work).  Your new pump will have a different serial number, so it is different.  
 
