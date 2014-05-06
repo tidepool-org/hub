@@ -55,7 +55,7 @@ This means that the pump automatically resumed operation without user interactio
 
 ### `auto_resume_reduced`
 
-This means... We are not sure, but it might indicate a reduced functionality resume?
+This means... We are not sure, but it might indicate that the pump is resuming but on a reduced dose?  There is no indication of what that reduced dose might mean, and the "human readable" version of the status that Carelink provides is "Suspend (auto resume 100% Basal)" which seems to indicate that it's not reduced at all.
 
 ### `user_restart_basal`
 
