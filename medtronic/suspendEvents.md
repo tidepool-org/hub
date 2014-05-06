@@ -11,7 +11,7 @@ The important bits of information with definitions of terms used in the rest of 
 1. ***timestamp***: the timestamp
 2. ***event type***: The `Raw-Type` label, `ChangeSuspendEnable`
 3. ***status***: In the `Raw-Values` field, the `ENABLE` key (it has value `user_suspend` here)
-4. ***previous status***: In the `Raw-Values` field, the `PRE_ENABLE` key (it has value `normal_pumping` here)
+4. ***previous status***: In the `Raw-Values` field, the `PRE_ENABLE` key (it has value `normal_pumping` here), only exists on newer pumps (known to not be reported by the Revel)
 
 We enumerate the suspend and resume events based on their status.  It is important to note that the same set of values can appear in both `status` and `previous status`.
 
@@ -19,7 +19,7 @@ We enumerate the suspend and resume events based on their status.  It is importa
 
 When ***any*** of these events is seen, it means that the pump is suspended.  It is possible to see multiple of these before a resume event is seen.  When that happens, the multiple events are simply state changes internal to the pump and do not reflect changes in user-facing functionality (i.e. the pump is suspended).  Therefore, the time range that the pump was suspended is determined by the first suspend event seen followed by the first resume event seen.
 
-When processing these events, previous status is very helpful to determine when a state change (to/from suspension) actually occurred.
+When processing these events, previous status is very helpful to determine when a state change (to/from suspension) actually occurred, but it is important to keep in mind that support for the field only exists on some pumps.
 
 ### `user_suspend`
 
