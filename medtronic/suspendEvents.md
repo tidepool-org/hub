@@ -1,4 +1,4 @@
-This page discusses Tidepool's current understanding of the semantics of various suspend events seen from Carelink.  It is the result of assumptions and reverse engineering because we have yet been unable to get someone at Medtronic to confirm or deny that these are the semantics of the events.
+This page discusses Tidepool's current understanding of the semantics of various suspend events seen from Carelink.  It is the result of assumptions and reverse engineering because we have not yet contacted someone at Medtronic to confirm or deny that these are the semantics of the events.
 
 A suspend event generally looks something like:
 
