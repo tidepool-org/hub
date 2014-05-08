@@ -59,7 +59,19 @@ From looking at the Daily Summary Report in CareLink, when this happens, CareLin
 1. We first group the data by its upload, if a suspend and resume both existed in the same upload, then they belong together.  We mark them and store them as such.
 2. The remaining suspend/resume events (the ones that span upload boundaries), are then associated with each other on a per-device (or as close to it as we can get) basis.
 
-When we associate events together, we assign an id to the "suspend" event and then in the "resume" event's metadata, we attach a "joinKey" which points back to the suspend event in question.  This allows downstream processing to not have to guess at which datum is effected by which event.  Medtronic should adopt the same strategy when storing the actual events from its pumps.  That is, when it goes into suspend, it should "id" the suspend event and store that.  When it comes out of suspend, it should then generate an audit log with the id from the suspend event stored in it and clear the stored id.
+Or, so we thought we did when we originally wrote this.  We later learned about the problems with the `PRE_ENABLE` field on suspend events (discussed below) and had to resort to the less accurate heuristic that we believe Carelink currently employs.
+
+Either way, when we associate events together, we assign an id to the "suspend" event and then in the "resume" event's metadata, we attach a "joinKey" which points back to the suspend event in question.  This allows downstream processing to not have to guess at which datum is effected by which event.  Medtronic should adopt the same strategy when storing the actual events from its pumps.  That is, when it goes into suspend, it should "id" the suspend event and store that.  When it comes out of suspend, it should then generate an audit log with the id from the suspend event stored in it and clear the stored id.
+
+### Suspend events have a `PRE_ENABLE` field that is unreliable
+
+"Suspend events" as documented at [Suspend Events](./suspendEvents.md) have a `PRE_ENABLE` field, which seems really useful for being able to keep track of suspend state changes.
+
+With the combination of the `ENABLE` and `PRE_ENABLE` fields on each suspend event, it appears like each event is telling us what the previous state was and what the new state is.  However, due to either design or bug (not sure), there is at least one case in the wild where we have seen two events in succession with different timestamps but the ***exact same*** `ENABLE` and `PRE_ENABLE` values.  This means that we cannot actually trust that the events are providing an accurate recording of the state changes that are occuring.
+
+We are assuming this is actually due to a bug on the device and if we understood what circumstances could cause it to happen, it would make it possible to accurately work around Medtronic's bug, but given that we do not have any specifications or description of the data format, all we have is our own speculation.  We must then make up a method of handling these anomalous situations and hope that we are correct.
+
+That method is to actually reduce the fidelity of our handling of suspend events as discussed in the item above about resume events not referencing their suspend.  We are required to revert to what we believe Carelink does and show the period of least suspension for a given device.  This is not as accurate as it should be, but given the data that is being provided, we are unable to come up with an accurate algorithm for reproducing what the pump is doing
 
 ### Temp Percent Basals stop `BasalProfileStart` events
 
