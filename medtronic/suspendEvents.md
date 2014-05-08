@@ -19,7 +19,7 @@ We enumerate the suspend and resume events based on their status.  It is importa
 
 When ***any*** of these events is seen, it means that the pump is suspended.  It is possible to see multiple of these before a resume event is seen.  When that happens, the multiple events are simply state changes internal to the pump and do not reflect changes in user-facing functionality (i.e. the pump is suspended).  Therefore, the time range that the pump was suspended is determined by the first suspend event seen followed by the first resume event seen.
 
-When processing these events, previous status is very helpful to determine when a state change (to/from suspension) actually occurred, but it is important to keep in mind that support for the field only exists on some pumps.
+When processing these events, previous status is very helpful to determine when a state change (to/from suspension) actually occurred, but it is important to keep in mind that support for the field only exists on some pumps.  Or, so one might think.  However, we have seen at least one case out in the wild where a pump apparently generated "duplicate" suspend events with different timestamps, but the exact same status and previous status.  So, this is not actually reliable.
 
 ### `user_suspend`
 
