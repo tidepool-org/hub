@@ -1,4 +1,4 @@
-This page discusses Tidepool's current understanding of the semantics of various suspend events seen from Carelink.  It is the result of assumptions and reverse engineering because we have not yet contacted someone at Medtronic to confirm or deny that these are the semantics of the events.
+This page discusses Tidepool's current understanding of the semantics of various suspend events seen from Carelink.  It is the result of reading the user manual, making assumptions and reverse engineering because we have not yet contacted someone at Medtronic to confirm or deny that these are the semantics of the events.
 
 A suspend event generally looks something like:
 
@@ -31,15 +31,15 @@ This means that an alarm on the pump has caused a suspend to occur.  This is aut
 
 ### `low_suspend_mode_1`
 
-This means that the pump is suspending operation due to low glucose suspend.  This is automated and does not signify any user interaction.
+This means that the pump is suspending operation due to low glucose.  This is automated and does not signify any user interaction.  It generally follows an `alarm_suspend`.
 
 ### `low_suspend_no_response`
 
-This means that the pump is suspending because it alarmed for low suspend and the user did nothing.  This is automated and does not signify any user interaction
+This means that the user has not responded to an `alarm_suspend`.  This is automated and does not signify any user interaction
 
 ### `low_suspend_user_selected`
 
-This means...  We don't really know what this means, we don't see a pattern that helps signify it either.  It is equally likely to be useful information as well as superfluous information that is included to confuse the reader.
+This indicates that the user has decided to allow the automated suspend to persist.  That is, when `alarm_suspend` happens, an alarm is shown to the user and they have the choice of canceling or allowing the suspend.  When they make the choice to maintain the suspend, this event occurs.
 
 ## Resume events
 
@@ -55,8 +55,8 @@ This means that the pump automatically resumed operation without user interactio
 
 ### `auto_resume_reduced`
 
-This means... We are not sure, but it might indicate that the pump is resuming but on a reduced dose?  There is no indication of what that reduced dose might mean, and the "human readable" version of the status that Carelink provides is "Suspend (auto resume 100% Basal)" which seems to indicate that it's not reduced at all.
+This means that the pump automatically resumed operation without use interaction.  There is no indication of what that reduced dose might mean, and the "human readable" version of the status that Carelink provides is "Suspend (auto resume 100% Basal)" which seems to indicate that it's not reduced at all.
 
 ### `user_restart_basal`
 
-This means that the user manually restarted their basal operation after an automated suspend.
+This means that the user manually restarted their basal operation after an automated suspend.  I.e. after `alarm_suspend` the user cleared the alarm and choose to restart their basal rate.
