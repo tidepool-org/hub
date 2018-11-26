@@ -1,6 +1,9 @@
 hub
 ===
 
+** This repository has been deprecated. You can find up-to-date information at https://developer.tidepool.org/. **
+
+---
 Central storage for Tidepool planning and issue tracking.
 
 This repository exists to provide a central place where we can put public items related to planning and execution of Tidepool projects. We do this because trying to manage a couple of dozen repositories individually will get a little bit too crazy.
