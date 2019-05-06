@@ -4,6 +4,8 @@ This document is an attempt to document the issues we have run into when dealing
 
 This appears to happen when a patient goes through the bolus wizard, chooses to do a dual and then sets the initial injection to 0 units.  The unit appears to not emit the `Dual/Normal` because it is 0 units.  This makes the logic to properly correlate boluses with their wizard more difficult.  It would be nice if `Dual/Normal` were always emitted, no matter what.  However, this issue can also be resolved by a solution to the next item.
 
+Bolus Wizard allows user to pick a bolus which only has the Square component with no immediate bolus, perhaps not logging the Dual/Normal event is a side-effect of this feature? Also, in case a square bolus only has been selected by the user, not logging 0 units of Dual/Normal makes sense. 
+
 ### Bolus records and Bolus wizard records are difficult to correlate
 
 When a patient goes through the bolus wizard to pick a normal bolus, it generates two events
